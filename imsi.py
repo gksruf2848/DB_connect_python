@@ -10,8 +10,7 @@ query = '''CREATE TABLE IF NOT EXISTS exoplanets (
 
 connection  = jaydebeapi.connect(
     "org.h2.Driver",
-    "jdbc:h2:tcp://localhost:9092/inbodydb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
-    #"jdbc:h2:tcp://localhost:8082/inbodydb",
+    "jdbc:h2:tcp://localhost:9092/inbodydb",
     ["SA", ""],
     "/Users/hanlim_air/HANLIM/h2/bin/h2-1.4.200.jar")
 cursor = connection.cursor()
