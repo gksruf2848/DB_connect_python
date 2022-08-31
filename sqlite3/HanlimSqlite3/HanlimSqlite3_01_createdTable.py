@@ -1,3 +1,5 @@
+# Creating a table.
+
 import sqlite3
 
 db_filename = 'hanlim.db'
