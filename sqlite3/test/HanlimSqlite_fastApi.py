@@ -10,7 +10,7 @@
 
 #end_pymotw_header
 
-# layout_07_server.py
+# HanlimSqlite_fastApi.py
 
 from fastapi import FastAPI
 from pydantic import BaseModel, HttpUrl
@@ -23,29 +23,7 @@ app = FastAPI()
 
 # --- DB ---
 db_filename = 'hanlim.db'
-
-with sqlite3.connect(db_filename, detect_types=sqlite3.PARSE_DECLTYPES) as conn:
-    conn.execute("""
-    create table if not exists tbl_004 (
-        id              integer primary key autoincrement not null,
-        rsp_code        text,
-        rsp_msg         text,
-        tran_idn_num    text
-    )""")
-
-with sqlite3.connect(db_filename) as conn:
-    cursor = conn.cursor()
-    conn.execute("Insert into tbl_004 (rsp_code, rsp_msg, tran_idn_num) values ('CODE', '응답메시지입니다', 'BA23')")
-    conn.commit()
-
-    cursor.execute("""
-    select * from tbl_004 where id = 1
-    """)
-    id, rsp_code, rsp_msg, tran_idn_num = cursor.fetchone()
-
-    res_004 = '{"id":' + str(id) + ',"rsp_code":"' + rsp_code + '", "rsp_msg":"' + rsp_msg + '", "tran_idn_num":"' + tran_idn_num + '"}'
-    print(res_004)
-
+    
 
 # --- Req Classes ---
 class SettlementInfoWithdraw(BaseModel):
@@ -100,10 +78,83 @@ class Req004Items(BaseModel):
     apvr_sms_yn: str = 'Y'
     apvr_mobile_num: int = '01058446024'
     
+class ReqImsiItems(BaseModel):
+    #id: int = 123
+    rsp_code: str = 'CODE'
+    rsp_msg: str = '응답메시지'
+    tran_idn_num: str = 'BA23'
 
-@app.post('/deposit/invr_dpsa/transfer/withdraw')
-async def postIndex(reqItems: Req004Items):
+@app.post('/hanlim/insert')
+async def insert(reqItems: ReqImsiItems):
     print('REQ >>>', reqItems)
-    dic = json.loads(res_004)
-    dic['rsp_code'] = reqItems.code
-    return dic
+    with sqlite3.connect(db_filename) as conn:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+        select * from tbl_004 where 1 = 1
+        """)
+        lstRes = []
+        for id, rsp_code, rsp_msg, tran_idn_num in cursor.fetchall():
+            #print(id, rsp_code, rsp_msg, tran_idn_num)
+            dic = {}
+            dic["id"] = id
+            dic["rsp_code"] = rsp_code
+            dic["rsp_msg"] = rsp_msg
+            dic["tran_idn_num"] = tran_idn_num
+
+            #print(dic)
+            lstRes.append(dic)
+
+    #dic = json.loads(lstRes)
+    # dic['rsp_code'] = reqItems.code
+    return lstRes
+
+@app.post('/hanlim/selectone')
+async def selectOne(reqItems: ReqImsiItems):
+    print('REQ >>>', reqItems)
+    with sqlite3.connect(db_filename) as conn:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+        select * from tbl_004 where 1 = 1
+        """)
+        lstRes = []
+        for id, rsp_code, rsp_msg, tran_idn_num in cursor.fetchall():
+            #print(id, rsp_code, rsp_msg, tran_idn_num)
+            dic = {}
+            dic["id"] = id
+            dic["rsp_code"] = rsp_code
+            dic["rsp_msg"] = rsp_msg
+            dic["tran_idn_num"] = tran_idn_num
+
+            #print(dic)
+            lstRes.append(dic)
+
+    #dic = json.loads(lstRes)
+    # dic['rsp_code'] = reqItems.code
+    return lstRes
+
+@app.post('/hanlim/selectall')
+async def selectAll(reqItems: ReqImsiItems):
+    print('REQ >>>', reqItems)
+    with sqlite3.connect(db_filename) as conn:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+        select * from tbl_004 where 1 = 1
+        """)
+        lstRes = []
+        for id, rsp_code, rsp_msg, tran_idn_num in cursor.fetchall():
+            #print(id, rsp_code, rsp_msg, tran_idn_num)
+            dic = {}
+            dic["id"] = id
+            dic["rsp_code"] = rsp_code
+            dic["rsp_msg"] = rsp_msg
+            dic["tran_idn_num"] = tran_idn_num
+
+            #print(dic)
+            lstRes.append(dic)
+
+    #dic = json.loads(lstRes)
+    # dic['rsp_code'] = reqItems.code
+    return lstRes
