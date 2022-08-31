@@ -9,6 +9,6 @@ db_is_new = not os.path.exists(db_filename)
 
 with sqlite3.connect(db_filename) as conn:
     if db_is_new:   # (X) db가 없다면,
-        print('(X) Need to create schema')
+        print('(X) Database has been created.')
     else:           # (O) db가 있다면,
-        print('(O) Database exists, assume schema does, too.')
+        print('(O) Database exists.')
