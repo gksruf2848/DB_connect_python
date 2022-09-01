@@ -104,7 +104,6 @@ async def insert(reqItems: ReqImsiItems):
 
             #print(dic)
             lstRes.append(dic)
-
     #dic = json.loads(lstRes)
     # dic['rsp_code'] = reqItems.code
     return lstRes
@@ -118,21 +117,14 @@ async def selectOne(reqItems: ReqImsiItems):
         cursor.execute("""
         select * from tbl_004 where 1 = 1
         """)
-        lstRes = []
-        for id, rsp_code, rsp_msg, tran_idn_num in cursor.fetchall():
-            #print(id, rsp_code, rsp_msg, tran_idn_num)
-            dic = {}
-            dic["id"] = id
-            dic["rsp_code"] = rsp_code
-            dic["rsp_msg"] = rsp_msg
-            dic["tran_idn_num"] = tran_idn_num
+        id, rsp_code, rsp_msg, tran_idn_num = cursor.fetchone()
+        dic = {}
+        dic["id"] = id
+        dic["rsp_code"] = rsp_code
+        dic["rsp_msg"] = rsp_msg
+        dic["tran_idn_num"] = tran_idn_num
 
-            #print(dic)
-            lstRes.append(dic)
-
-    #dic = json.loads(lstRes)
-    # dic['rsp_code'] = reqItems.code
-    return lstRes
+    return dic
 
 @app.post('/hanlim/selectall')
 async def selectAll(reqItems: ReqImsiItems):
