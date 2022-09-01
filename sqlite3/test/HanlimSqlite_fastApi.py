@@ -79,46 +79,58 @@ class Req004Items(BaseModel):
     apvr_mobile_num: int = '01058446024'
     
 class ReqImsiItems(BaseModel):
-    #id: int = 123
-    rsp_code: str = 'CODE'
-    rsp_msg: str = '응답메시지'
-    tran_idn_num: str = 'BA23'
+    # id: int = 1
+    rsp_code: str = 'GJWY'
+    rsp_msg: str = '응답없슴'
+    tran_idn_num: str = 'AA'
 
 @app.post('/hanlim/insert')
 async def insert(reqItems: ReqImsiItems):
     print('REQ >>>', reqItems)
     with sqlite3.connect(db_filename) as conn:
         cursor = conn.cursor()
-
-        cursor.execute("""
-        select * from tbl_004 where 1 = 1
-        """)
-        lstRes = []
-        for id, rsp_code, rsp_msg, tran_idn_num in cursor.fetchall():
-            #print(id, rsp_code, rsp_msg, tran_idn_num)
-            dic = {}
-            dic["id"] = id
-            dic["rsp_code"] = rsp_code
-            dic["rsp_msg"] = rsp_msg
-            dic["tran_idn_num"] = tran_idn_num
-
-            #print(dic)
-            lstRes.append(dic)
+        cursor.execute("insert into tbl_004 (rsp_code, rsp_msg, tran_idn_num) values ('" + reqItems.rsp_code + "', '" + reqItems.rsp_msg + "', ' " + reqItems.tran_idn_num + "')")
+        cursor.execute("select * from tbl_004 where id = last_insert_rowid()")
+        conn.commit()
+        id, rsp_code, rsp_msg, tran_idn_num = cursor.fetchone()
+        # dic = {}
+        dic = dict()
+        dic["id"] = id
+        dic["rsp_code"] = rsp_code
+        dic["rsp_msg"] = rsp_msg
+        dic["tran_idn_num"] = tran_idn_num
     #dic = json.loads(lstRes)
     # dic['rsp_code'] = reqItems.code
-    return lstRes
+    return dic
 
-@app.post('/hanlim/selectone')
-async def selectOne(reqItems: ReqImsiItems):
+@app.post('/hanlim/insert')
+async def insert(reqItems: ReqImsiItems):
     print('REQ >>>', reqItems)
     with sqlite3.connect(db_filename) as conn:
         cursor = conn.cursor()
-
-        cursor.execute("""
-        select * from tbl_004 where 1 = 1
-        """)
+        cursor.execute("insert into tbl_004 (rsp_code, rsp_msg, tran_idn_num) values ('" + reqItems.rsp_code + "', '" + reqItems.rsp_msg + "', ' " + reqItems.tran_idn_num + "')")
+        cursor.execute("select * from tbl_004 where id = last_insert_rowid()")
+        conn.commit()
         id, rsp_code, rsp_msg, tran_idn_num = cursor.fetchone()
-        dic = {}
+        # dic = {}
+        dic = dict()
+        dic["id"] = id
+        dic["rsp_code"] = rsp_code
+        dic["rsp_msg"] = rsp_msg
+        dic["tran_idn_num"] = tran_idn_num
+    #dic = json.loads(lstRes)
+    # dic['rsp_code'] = reqItems.code
+    return dic
+
+@app.get('/hanlim/selectone')
+async def selectOne(id: int):
+    print('REQ >>> id = ', id)
+    with sqlite3.connect(db_filename) as conn:
+        cursor = conn.cursor()
+        cursor.execute("select * from tbl_004 where id = " + str(id))
+        id, rsp_code, rsp_msg, tran_idn_num = cursor.fetchone()
+        # dic = {}
+        dic = dict()
         dic["id"] = id
         dic["rsp_code"] = rsp_code
         dic["rsp_msg"] = rsp_msg
@@ -132,9 +144,7 @@ async def selectAll(reqItems: ReqImsiItems):
     with sqlite3.connect(db_filename) as conn:
         cursor = conn.cursor()
 
-        cursor.execute("""
-        select * from tbl_004 where 1 = 1
-        """)
+        cursor.execute("select * from tbl_004 where 1 = 1")
         lstRes = []
         for id, rsp_code, rsp_msg, tran_idn_num in cursor.fetchall():
             #print(id, rsp_code, rsp_msg, tran_idn_num)

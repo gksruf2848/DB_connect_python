@@ -8,5 +8,5 @@ with sqlite3.connect(db_filename, detect_types=sqlite3.PARSE_DECLTYPES) as conn:
         id              integer primary key autoincrement not null,
         rsp_code        text,
         rsp_msg         text,
-        tran_idn_num    text
+        tran_idn_num    text 
     )""")
