@@ -9,5 +9,5 @@ with sqlite3.connect(db_filename) as conn:
     """)
 
     #cursor.fetchone()
-    for (id, data) in cursor.fetchall():
-        print(id, data)
+    for (id, name, age) in cursor.fetchall():
+        print(id, name, age)
